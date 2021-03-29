@@ -1,26 +1,30 @@
 package com.example.tt;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class PROFILE extends AppCompatActivity {
 
 
-    // private Button btncontact;
-    private Button btntt;
-    private Button btnhol;
-    private  Button btnfac;
-    private  Button btnsb;
-    //  private Button btnln;
-    check c;
 
+    private FirebaseAuth mAuth;
+    check c;
+    private int mode = 0;
+    private String Filename = "sdfile";
+    private String Data = "b";
 
 
 
@@ -107,6 +111,7 @@ public class PROFILE extends AppCompatActivity {
 
 
 
+
     }
     int backButtonCount=0;
     @Override
@@ -128,5 +133,34 @@ public class PROFILE extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater  =getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                logout();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public  void logout(){
+        mAuth=FirebaseAuth.getInstance();
+        Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+        SharedPreferences pref = getSharedPreferences(Filename, mode);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(Data, false);
+        editor.commit();
+        finish();
+        mAuth.signOut();
+        startActivity(intent);
+        finish();
+    }
 }
+
